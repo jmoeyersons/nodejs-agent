@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-agent",
+  "version": "1.0.0",
+  "description": "Nodejs-agent for monitoring instances",
+  "main": "rpicluster.agent.js",
+  "scripts": {
+    "start": "node rpicluster.agent.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://jfmoeyer@github.ugent.be/jfmoeyer/nodejs-agent.git"
+  },
+  "keywords": [],
+  "author": "Pieter-Jan Maenhaut",
+  "license": "ISC",
+  "dependencies": {
+    "diskusage": "^0.2.1",
+    "express": "^4.15.2",
+    "os": "^0.1.1"
+  }
+}
