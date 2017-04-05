@@ -11,5 +11,5 @@ curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.s
 sudo su
 rabbitmqctl add_user faafo guest
 rabbitmqctl set_user_tags faafo administrator
-rabbitmqcl set_permissions -p / faafo ".*" ".*" ".*"
+rabbitmqctl set_permissions -p / faafo ".*" ".*" ".*"
 npm start 

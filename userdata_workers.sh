@@ -9,4 +9,6 @@ sudo apt-get install -y nodejs
 sudo npm install
 curl -L -s http://git.openstack.org/cgit/openstack/faafo/plain/contrib/install.sh | bash -s -- \
         -i faafo -r worker -e "http://$ip_addr" -m "amqp://faafo:guest@$ip_addr:5672/"
+sleep 10s
+supervisorctl restart faafo_worker
 sudo npm start 
