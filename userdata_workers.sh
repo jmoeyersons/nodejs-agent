@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
-ip_addr="$1"
+ip_addr1="$1"
+ip_addr2="$2"
+if [[ $ip_addr == 10* ]]
+then 
+ip_addr=$ip_addr1
+fi
+if [[ $ip_addr2 == 10* ]]
+then 
+ip_addr=$ip_addr2
+fi
+echo "Ip-adress is $ip_addr"
 cd ~
 git clone https://github.com/moeyerke/nodejs-agent.git
 cd nodejs-agent
