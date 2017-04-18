@@ -31,6 +31,12 @@ router.get("/info",function(req,res){
     res.end(JSON.stringify(new Systeminfo().getAll()));
 });
 
+//info/openstack
+router.get("/openstack", function(req, res) {
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(new Systeminfo().getTestInfo()));
+})
+
 
 //info/disk
 router.get("/info/disk",function(req,res){

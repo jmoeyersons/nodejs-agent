@@ -30,6 +30,14 @@ method.getUptime = function (){
 	return{"uptime": os.uptime()}
 };
 
+method.getTestInfo = function () {
+	return {
+		"load": this.getLoad(),
+		"cpu": this.getCpuInfo(),
+		"memory": this.getMemoryInfo()
+	};
+}
+
 method.getAll = function() {
 	return {
 		"disk": this.getDiskInfo(),
