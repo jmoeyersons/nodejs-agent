@@ -7,7 +7,7 @@ const HOST_NAME = 'jerico-03'
 var method = Systeminfo.prototype;
 
 var DEBUG = true;
- 
+
 const consoleLogBackup = console.log;
 const log = (...args) => DEBUG && consoleLogBackup(...args);
 
@@ -35,9 +35,13 @@ method.updateMongoDB = function (callback) {
         //connection.connect();
         connection.query("SELECT host, count(*) from instances where power_state = 1 and host like '" + HOST_NAME + "' group by host", (error, result, fields) => {
             log("Error: ", error);
-            log("instances: ", result[0]['count(*)']);
-            log("fields ", fields);
-            var instances = result[0]['count(*)'];
+            if (result[0]) {
+                log("instances: ", result[0]['count(*)']);
+                log("fields ", fields);
+                var instances = result[0]['count(*)'];
+            } else {
+                var instances = 0;
+            }
             MongoClient.connect(url, (err, db) => {
                 assert.equal(null, err);
                 insertDocument(db, cpu_usage, free_mem, instances, () => {
@@ -66,6 +70,23 @@ var insertDocument = function (db, cpu_usage, free_mem, instances, callback) {
         log("Inserted a document into the collection.");
         callback();
     });
+}
+
+method.getPeriodStats = function(start, end, callback) {
+    MongoClient.connect(url, (err, db) => {
+        assert.equal(null, err);
+        var cursor = db.collection(HOST_NAME.replace('-', '')).find({"timestamp": {$gte: new ISODate(start)}});
+        var result = [];
+        cursor.each(function (err, doc) {
+            if (doc != null) {
+                console.log(result);
+                result.push(doc);
+            } else {
+                db.close();
+                callback(result);
+            }
+        });
+    })
 }
 
 method.getMonitorInfo = function (callback) {

@@ -42,9 +42,15 @@ router.get("/openstack", function(req, res) {
 router.get("/mongodb", function(req, res) {
     res.writeHead(200, {'Content-Type': 'application/json'});
     new Systeminfo().updateMongoDB(function(result) {
-        res.end(result);
+        res.end(JSON.stringify(result));
     });
 })
+
+router.get("/periodstats", function(req, res) {
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    console.log(req);
+    res.end(req);
+});
 
 
 /*//info/disk
