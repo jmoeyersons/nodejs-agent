@@ -4,7 +4,7 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 
-var Systeminfo = require('./systeminfo');
+var Systeminfo = require('./systeminfo_async');
 
 router.use(function (req,res,next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -19,7 +19,7 @@ function handleRequest(request, response){
     }
 }
 
-//ping
+/*//ping
 router.get("/ping",function(req,res){
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('1');
@@ -29,16 +29,25 @@ router.get("/ping",function(req,res){
 router.get("/info",function(req,res){
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(new Systeminfo().getAll()));
-});
+});*/
 
 //info/openstack
 router.get("/openstack", function(req, res) {
     res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(new Systeminfo().getTestInfo()));
+    new Systeminfo().getMonitorInfo(function(result) {
+        res.end(JSON.stringify(result));
+    });
+})
+
+router.get("/mongodb", function(req, res) {
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    new Systeminfo().updateMongoDB(function(result) {
+        res.end(result);
+    });
 })
 
 
-//info/disk
+/*//info/disk
 router.get("/info/disk",function(req,res){
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(new Systeminfo().getDiskInfo()));
@@ -67,7 +76,7 @@ router.get("/info/memory", function(req, res) {
 router.get("/info/uptime", function(req, res) {
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(new Systeminfo().getUptime()));
-});
+});*/
 
 
 app.use("/",router);
