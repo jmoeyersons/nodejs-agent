@@ -1,30 +1,31 @@
-const AGENT_PORT=8081; 
+const AGENT_PORT = 8081;
 
 var express = require("express");
+var url = require('url');
 var app = express();
 var router = express.Router();
 
 var Systeminfo = require('./systeminfo_async');
 
-router.use(function (req,res,next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
+router.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
 });
 
-function handleRequest(request, response){
+function handleRequest(request, response) {
     try {
         dispatcher.dispatch(request, response);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 }
 
-/*//ping
+//ping
 router.get("/ping",function(req,res){
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('1');
 });
-
+/*
 //info
 router.get("/info",function(req,res){
     res.writeHead(200, {'Content-Type': 'application/json'});
@@ -32,24 +33,27 @@ router.get("/info",function(req,res){
 });*/
 
 //info/openstack
-router.get("/openstack", function(req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    new Systeminfo().getMonitorInfo(function(result) {
+router.get("/openstack", function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    new Systeminfo().getMonitorInfo(function (result) {
         res.end(JSON.stringify(result));
     });
 })
 
-router.get("/mongodb", function(req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    new Systeminfo().updateMongoDB(function(result) {
+router.get("/mongodb", function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    new Systeminfo().updateMongoDB(function (result) {
         res.end(JSON.stringify(result));
     });
 })
 
-router.get("/periodstats", function(req, res) {
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    console.log(req);
-    res.end(req);
+router.get("/periodstats", function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
+    new Systeminfo().getPeriodStats(query.start, query.end, (result) => {
+        res.end(result);
+    });
 });
 
 
@@ -85,11 +89,11 @@ router.get("/info/uptime", function(req, res) {
 });*/
 
 
-app.use("/",router);
-app.use("*",function(req,res){
-  res.end();
+app.use("/", router);
+app.use("*", function (req, res) {
+    res.end();
 });
 
-app.listen(AGENT_PORT,function(){
+app.listen(AGENT_PORT, function () {
     console.log("Agent ready, listening on: http://localhost:%s", AGENT_PORT);
 });
