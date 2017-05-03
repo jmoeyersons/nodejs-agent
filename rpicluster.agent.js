@@ -51,7 +51,7 @@ router.get("/periodstats", function (req, res) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     var url_parts = url.parse(req.url, true);
     var query = url_parts.query;
-    new Systeminfo().getPeriodStats(query.start, query.end, (result) => {
+    new Systeminfo().getPeriodStats(query.start, query.stop, (result) => {
         res.end(result);
     });
 });
